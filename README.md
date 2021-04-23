@@ -2,12 +2,13 @@
 进入工程目录,执行如下代码,开启docker即可
 如碰到安装源等问题,可以自行修改安装源,或者FQ解决.
 ```
+git clone https://github.com/roiff/ocrtext.git
 docker build -t ocrtext:v1 .
-docker run -d --net host --rm -p 8089:8089 --name ocrtext ocrtext:v1
+docker run -d --net host --rm -p 8099:8099 --name ocrtext ocrtext:v1
 ```
 接口地址:
 http://ip:[port]///api/ocrtext/
-默认端口8089
+默认端口8099
 
 接口方式:
 header: 

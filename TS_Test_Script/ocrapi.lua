@@ -16,7 +16,7 @@ end
 
 local M = {}
 --- 创建一个新的接口,会在触动res目录下创建临时截图文件
--- - @url 必填,接口地址 'http://ip:port/api/ocrtext/',默认端口8089
+-- - @url 必填,接口地址 'http://ip:port/api/ocrtext/',默认端口8099
 -- - @filename 选填,文件名,用于res目录下临时文件的文件名.
 -- - @suffix 选填,后缀,默认为.jpg,可以修改为.png
 function M.new(url,filename,suffix)

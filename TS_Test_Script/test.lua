@@ -2,7 +2,7 @@ require("TSLib")
 
 local ocrapi = require("ocrapi")
 ---会在res目录下创建 item_ocr 目录,用于存放临时截图文件,文件名为 item.jpg
-local itemocr = ocrApi.new("http://192.168.1.2:8089/api/ocrtext/","item")
+local itemocr = ocrApi.new("http://192.168.1.2:8099/api/ocrtext/","item")
 
 
 --- 这里使用key,value模式,返回值将会是{key=识别到的内容}

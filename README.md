@@ -4,10 +4,10 @@
 ```
 git clone https://github.com/roiff/ocrtext.git
 docker build -t ocrtext:v1 .
-docker run -d --net host --rm -p 8099:8099 --name ocrtext ocrtext:v1
+docker run -d --net host -p 8099:8099 --name ocrtext ocrtext:v1
 ```
 接口地址:
-http://ip:[port]///api/ocrtext/
+http://ip:[port]/api/ocrtext/
 默认端口8099
 
 接口方式:

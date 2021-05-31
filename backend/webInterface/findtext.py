@@ -112,6 +112,7 @@ class FindText(tornado.web.RequestHandler):
 
         self.finish(json.dumps(
             {'code': 200, 'msg': '成功',
-             'data': {'raw_out': res, 'speed_time': round(time.time() - start_time, 2)}},
+             'words': res,
+            },
             cls=NpEncoder))
         return

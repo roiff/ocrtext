@@ -16,10 +16,12 @@ end
 
 local M = {}
 --- 创建一个新的接口,会在触动res目录下创建临时截图文件
--- - @url 必填,接口地址 'http://ip:port/api/ocrtext/',默认端口8099
+-- - @url 必填,接口地址 'http://ip:port/api/',默认端口8099
 -- - @filename 选填,文件名,用于res目录下临时文件的文件名.
 -- - @suffix 选填,后缀,默认为.jpg,可以修改为.png
-function M.new(url,filename,suffix)
+function M.new(apiurl,filename,suffix)
+    local ocrurl = apiurl.."ocrtext/"
+    local findurl = apiurl.."findtext"
     local obj = {}
     if not filename then
         obj.filename = "ocr_img"
@@ -102,7 +104,7 @@ function M.new(url,filename,suffix)
         local response_body = {}
         local _, code =
             http_socket.request {
-            url = url,
+            url = ocrurl,
             method = 'POST',
             headers = headers,
             source = ltn12.source.string(data),
@@ -126,7 +128,15 @@ function M.new(url,filename,suffix)
         end
     end
 
-    function obj:find(box,whitelist,compress)
+    ---查找方法,向接口请求查找文字
+    -- - @box 必填,屏幕中要查找的文本框范围,是一个一维数组新式,如{x1,y1,x2,y2}
+    -- - @whitelist 选填,白名单字符串.
+    -- - @compress 选填,图像压缩比,把图像的短边(图像中较短的边长)压缩成对应数值进行查找.
+    -- 不填写时短边大于960时,压缩成960,否则不压缩,注意!!!该参数会影响文本框的识别,
+    -- 比如在图像较大,文字较小时,可以调整参数,提高准确率,参数越小,速度越快.一般情况可以不填写,或者填写nil
+    -- -@match 选填,图像匹配模式,只有再有白名单的时候才生效,默认为false,即只要在白名单中出现的字符串都列出,
+    -- 当参数为true时,仅查找和白名单完全匹配的字符串.
+    function obj:find(box,whitelist,compress,match)
         local x1,y1,x2,y2 = table.unpack(box)
         
         local img_path = table.concat{self.findimg,self.filename,self.suffix}
@@ -161,7 +171,7 @@ function M.new(url,filename,suffix)
         local response_body = {}
         local _, code =
             http_socket.request {
-            url = url,
+            url = findurl,
             method = 'POST',
             headers = headers,
             source = ltn12.source.string(data),
@@ -173,7 +183,19 @@ function M.new(url,filename,suffix)
             if #str > 0 then
                 local words = json.decode(str)["words"]
                 if words then
-                    return words
+                    local res = {}
+                    if match and whitelist then
+                        for _,v in ipairs(words) do
+                            if v[2] == whitelist then
+                                table.insert(res,{v[2],{v[1][1][1]+x1,v[1][1][2]+y1,v[1][3][1]+x1,v[1][3][2]+y1}})
+                            end
+                        end
+                    else
+                        for _,v in ipairs(words) do
+                            table.insert(res,{v[2],{v[1][1][1]+x1,v[1][1][2]+y1,v[1][3][1]+x1,v[1][3][2]+y1}})
+                        end
+                    end
+                    return res
                 else
                     logger:debug("识别API识别内容失败: "..response_body[1])
                     return

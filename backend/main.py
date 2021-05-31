@@ -8,7 +8,7 @@ import tornado.web
 import tornado.httpserver
 import tornado.ioloop
 from backend.tools.get_host_ip import host_ip
-from backend.webInterface import ocrtext
+from backend.webInterface import ocrtext,findtext
 from backend.tools import log
 import logging
 logger = logging.getLogger(log.LOGGER_ROOT_NAME+'.'+__name__)
@@ -19,6 +19,7 @@ current_path = os.path.dirname(__file__)
 def make_app():
     return tornado.web.Application([
         (r"/api/ocrtext/", ocrtext.OcrText),
+        (r"/api/findtext/", findtext.FindText),
     ])
 
 

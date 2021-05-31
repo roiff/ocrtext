@@ -86,8 +86,8 @@ class FindText(tornado.web.RequestHandler):
         else:
             short_size = min(img_w, img_h)
 
-        if short_size < 32:
-            short_size = 32
+        if short_size < 64:
+            short_size = 64
     
         if short_size > 960:
             short_size = 960
@@ -104,8 +104,9 @@ class FindText(tornado.web.RequestHandler):
         log_info = {
             'ip': self.request.remote_ip,
             'return': res,
+            'short_size': short_size,
             'time': time_now,
-            "short_size": short_size,
+            'speed_time': round(time.time() - start_time, 2)
         }
 
         logger.info(json.dumps(log_info, cls=NpEncoder))

@@ -28,12 +28,17 @@ function M.new(url,filename,suffix)
     end
     
     obj.path = userPath().."/res/ocr_"..filename.."/"
+    obj.findimg = userPath().."/res/find_"..filename.."/"
     obj.subpath = obj.path.."sub_img/"
     obj.suffix = suffix or ".jpg"
     do
         local bool = isFileExist(obj.path)
         if not bool then
             os.execute("mkdir "..obj.path)
+        end
+        bool = isFileExist(obj.findimg)
+        if not bool then
+            os.execute("mkdir "..obj.findimg)
         end
         bool = isFileExist(obj.subpath)
         if not bool  then
@@ -120,6 +125,66 @@ function M.new(url,filename,suffix)
             return
         end
     end
+
+    function obj:find(box,whitelist,compress)
+        local x1,y1,x2,y2 = table.unpack(box)
+        
+        local img_path = table.concat{self.findimg,self.filename,self.suffix}
+        snapshot(img_path,x1,y1,x2,y2)
+
+        local imgfile
+        local file = io.open(img_path, 'rb')
+        if file then
+            imgfile = file:read('*a')
+            file:close()
+        else
+            logger:error("识别API图片打开失败")
+            return
+        end
+
+        local data = {}
+        data[1] = ''
+        if whitelist then
+            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="whitelist"\r\n\r\n%s\r\n',whitelist)
+        end
+        if compress and type(compress) == 'number' then
+            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="compress"\r\n\r\n%s\r\n',compress)
+        end
+        data[#data+1] = string.format(
+            '----abcdefg\r\nContent-Disposition: form-data; name="file"; filename="push.jpg"\r\nContent-Type: image/jpeg\r\n\r\n%s\r\n----abcdefg--',
+            imgfile)
+        data = table.concat(data)
+        local headers = {
+            ['Content-Type'] = 'multipart/form-data; boundary=--abcdefg',
+            ['Content-Length'] = #data
+        }
+        local response_body = {}
+        local _, code =
+            http_socket.request {
+            url = url,
+            method = 'POST',
+            headers = headers,
+            source = ltn12.source.string(data),
+            sink = ltn12.sink.table(response_body)
+        }
+        
+        if code == 200 then
+            local str = table.concat(response_body)
+            if #str > 0 then
+                local words = json.decode(str)["words"]
+                if words then
+                    return words
+                else
+                    logger:debug("识别API识别内容失败: "..response_body[1])
+                    return
+                end
+            end
+        else
+            logger:error("识别API连接失败: "..response_body[1],img_path)
+            return
+        end
+    end
+
     return obj
 end
 

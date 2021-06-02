@@ -16,8 +16,8 @@ RUN yum -y update \
     && source ~/.bash_profile \
     && scl enable devtoolset-7 bash 
 
-
-RUN pip3 install --user  -U pip
+RUN pip3 install --user -U pip -i https://pypi.tuna.tsinghua.edu.cn/simple/  \ 
+    && pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/ 
 
 RUN source ~/.bash_profile && pip3 install -r requirements.txt
 

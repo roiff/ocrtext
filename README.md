@@ -3,9 +3,11 @@
 如碰到安装源等问题,可以自行修改安装源,或者FQ解决.
 ```
 git clone https://github.com/roiff/ocrtext.git
+cd ocrtext
 docker build -t ocrtext:v1 .
 docker run -d --net host -p 8099:8099 --name ocrtext ocrtext:v1
 ```
+
 接口地址:
 识别文字: http://ip:[port]/api/ocrtext/
 查找文字: http://ip:[port]/api/findtext/

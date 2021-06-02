@@ -1,5 +1,6 @@
 require('TSLib')
 local ts = require('ts')
+local sz = require("sz")
 local image = require("tsimg")
 local json = ts.json
 local http_socket = require('socket.http')
@@ -21,7 +22,7 @@ local M = {}
 -- - @suffix 选填,后缀,默认为.jpg,可以修改为.png
 function M.new(apiurl,filename,suffix)
     local ocrurl = apiurl.."ocrtext/"
-    local findurl = apiurl.."findtext"
+    local findurl = apiurl.."findtext/"
     local obj = {}
     if not filename then
         obj.filename = "ocr_img"
@@ -47,7 +48,7 @@ function M.new(apiurl,filename,suffix)
             os.execute("mkdir "..obj.subpath)
         end
     end
-    
+
     ---识别方法,向接口请求识别文字
     -- - @box 必填,屏幕中要识别的文本框范围,是一个二维数组新式,如{{x1,y1,x2,y2},{x1,y1,x2,y2}}
     -- 也可以使用key,value形式,如{["测试1"]={x1,y1,x2,y2}}
@@ -110,7 +111,7 @@ function M.new(apiurl,filename,suffix)
             source = ltn12.source.string(data),
             sink = ltn12.sink.table(response_body)
         }
-        
+
         if code == 200 then
             local str = table.concat(response_body)
             if #str > 0 then
@@ -138,7 +139,6 @@ function M.new(apiurl,filename,suffix)
     -- 当参数为true时,仅查找和白名单完全匹配的字符串.
     function obj:find(box,whitelist,compress,match)
         local x1,y1,x2,y2 = table.unpack(box)
-        
         local img_path = table.concat{self.findimg,self.filename,self.suffix}
         snapshot(img_path,x1,y1,x2,y2)
 
@@ -177,7 +177,7 @@ function M.new(apiurl,filename,suffix)
             source = ltn12.source.string(data),
             sink = ltn12.sink.table(response_body)
         }
-        
+
         if code == 200 then
             local str = table.concat(response_body)
             if #str > 0 then

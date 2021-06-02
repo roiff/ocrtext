@@ -3,7 +3,7 @@ local dump = require("DumpData")
 
 local ocrapi = require("ocrapi")
 ---会在res目录下创建 item_ocr 目录,用于存放临时截图文件,文件名为 item.jpg
-local itemocr = ocrapi.new("http://47.92.105.212:8099/api/","item")
+local itemocr = ocrapi.new("http://192.168.10.2:8099/api/","item")
 
 
 --- 这里使用key,value模式,返回值将会是{key=识别到的内容}
@@ -50,13 +50,13 @@ local str= dump(words1)
 nLog(str)
 
 local words2 = itemocr:find(box,w) -- 在范围内查找查找到的字符串,并匹配字符串在"集市"(白名单)范围内
-local str= dump(words1)
+local str= dump(words2)
 nLog(str)
 
 local words3 = itemocr:find(box,w,608) -- 在范围内查找查找到的字符串,并匹配字符串在"集市"(白名单)范围内,并把图像的短边压缩(放大)到608分辨率进行识别.
-local str= dump(words1)
+local str= dump(words3)
 nLog(str)
 
-local words3 = itemocr:find(box,w,nil,true) -- 在范围内查找查找到的字符串,并匹配字符串为"集市"(白名单)的字符串,单个"集"就不会返回.
-local str= dump(words1)
+local words4 = itemocr:find(box,w,nil,true) -- 在范围内查找查找到的字符串,并匹配字符串为"集市"(白名单)的字符串,单个"集"就不会返回.
+local str= dump(words4)
 nLog(str)

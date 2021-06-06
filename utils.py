@@ -144,7 +144,7 @@ def sorted_boxes(dt_boxes):
 
 
 def get_rotate_crop_image(img, points):
-    img_height, img_width = img.shape[0:2]
+
     left = int(np.min(points[:, 0]))
     right = int(np.max(points[:, 0]))
     top = int(np.min(points[:, 1]))
@@ -166,4 +166,55 @@ def get_rotate_crop_image(img, points):
     if dst_img_height * 1.0 / dst_img_width >= 1.5:
         dst_img = np.rot90(dst_img)
     return dst_img
+
+def get_crop_image(img, points):
+
+    left = int(np.min(points[:, 0]))
+    right = int(np.max(points[:, 0]))
+    top = int(np.min(points[:, 1]))
+    bottom = int(np.max(points[:, 1]))
+    img_crop = img[top:bottom, left:right, :].copy()
+    
+    img_height, img_width = img_crop.shape[0:2]
+    if img_height * 1.0 / img_width >= 1.5:
+        img_crop = np.rot90(img_crop)
+    return img_crop
+
+def get_hsv_range(colorlist):
+    hsv_list = []
+    for color_int in colorlist:
+        color_int = int(color_int,16)
+        b = (color_int & 255)/255.0
+        g = ((color_int >> 8) & 255)/255.0
+        r = ((color_int >> 16) & 255)/255.0
+
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        m = mx-mn
+        if mx == mn:
+            h = 0
+        elif mx == r:
+            if g >= b:
+                h = ((g-b)/m)*60
+            else:
+                h = ((g-b)/m)*60 + 360
+        elif mx == g:
+            h = ((b-r)/m)*60 + 120
+        elif mx == b:
+            h = ((r-g)/m)*60 + 240
+        if mx == 0:
+            s = 0
+        else:
+            s = m/mx
+        v = mx
+        
+        H = h / 2
+        S = s * 255.0
+        V = v * 255.0
+        hsv_list.append([H,S,V])
+
+    hsv_arr = np.array(hsv_list)
+    hsvLower = hsv_arr.min(0)
+    hsvUpper = hsv_arr.max(0)
+    return hsvLower,hsvUpper
 

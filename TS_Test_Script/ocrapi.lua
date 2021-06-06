@@ -128,7 +128,7 @@ function M.new(apiurl,filename,suffix)
             return
         end
     end
-
+    
     ---查找方法,向接口请求查找文字
     -- - @box 必填,屏幕中要查找的文本框范围,是一个一维数组新式,如{x1,y1,x2,y2}
     -- - @whitelist 选填,白名单字符串.

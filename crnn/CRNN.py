@@ -1,11 +1,8 @@
 from PIL import  Image
 import numpy as np
-import cv2
 from .keys import alphabetChinese as alphabet
-# from keys import alphabetChinese as alphabet
 
 import onnxruntime as rt
-# from util import strLabelConverter, resizeNormalize
 from .util import strLabelConverter, resizeNormalize
 
 converter = strLabelConverter(''.join(alphabet))
@@ -56,37 +53,7 @@ class CRNNHandle:
         return sim_pred
 
 
-
-    def predict_rbg(self, im):
-        """
-        预测
-        """
-        scale = im.size[1] * 1.0 / 32
-        w = im.size[0] / scale
-        w = int(w)
-
-        img = im.resize((w, 32), Image.BILINEAR)
-        img = np.array(img, dtype=np.float32)
-        img -= 127.5
-        img /= 127.5
-        image = img.transpose(2, 0, 1)
-        transformed_image = np.expand_dims(image, axis=0)
-
-        preds = self.sess.run(["out"], {"input": transformed_image.astype(np.float32)})
-        preds = preds[0]
-
-        length  = preds.shape[0]
-        preds = preds.reshape(length,-1)
-
-        # preds = softmax(preds)
-
-        preds = np.argmax(preds,axis=1)
-        preds = preds.reshape(-1)
-        sim_pred = converter.decode(preds, length, raw=False)
- 
-        return sim_pred
-
-    def predict_rbg_whitelist(self, im, whitelist):
+    def predict_rbg(self, im, whitelist):
         """
         预测
         """
@@ -114,7 +81,6 @@ class CRNNHandle:
                 if (i<length-1 and tmp != np.argmax(preds[i+1])) or i==length-1:
                     while True:
                         if tmp != 0:
-                            first = True
                             str = converter.decode_one(tmp)
                             if str in whitelist:
                                 sim_pred.append(str)
@@ -124,17 +90,12 @@ class CRNNHandle:
                         else:
                             break
                         tmp = np.argmax(preds[i])
-
             return ''.join(sim_pred)
         else:
             preds = np.argmax(preds,axis=1)
             preds = preds.reshape(-1)
             sim_pred = converter.decode(preds, length, raw=False)
-
             return sim_pred
-        
-        
-
 
 if __name__ == "__main__":
     im = Image.open("471594277244_.pic.jpg")

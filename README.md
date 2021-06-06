@@ -2,10 +2,15 @@
 
 ## 介绍
 主要参考开源项目以及训练模型： 
+
 [Tr](https://github.com/myhub/tr)
+
 [TrWebOCR](https://github.com/alisen39/TrWebOCR) 
+
 [chineseocr_lite](https://github.com/DayBreak-u/chineseocr_lite)
+
 此项目主要用于非扭曲、倾斜、变形的标准字体。 
+
 增加了手动标注文本框、按颜色查找文字、文字识别白名单等功能。 
 针对于类似屏幕截图等应用场景，准确、高效。 
 如果使用的非标准字体，或者有扭曲变形等应用，请参考其他OCR项目。 

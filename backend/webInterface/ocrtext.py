@@ -36,7 +36,7 @@ class OcrText(tornado.web.RequestHandler):
         # is_draw = True
 
         # listhex = [0xf6f502,0xc4bc06,0xffff01,0xebe803]
-        # listhex = [0xd8d0c8,0xfaf8f8,0xb0a297,0xebe9e8,0xffffff]
+        # listhex = [["0xd8d0c8","0xfaf8f8","0xb0a297","0xebe9e8","0xffffff"]]
         # listhex = [["0xe9d635","0xebd834","0x988c21","0xead733","0xb9a12f","0xcccf69"],["0x69ac5e","0x75fe8c","0x2a5b32"]]
         # [["0xef0b09","0xdf1412","0xc12520","0x8b2015"]]
         # [[240,447,333,468],[393,328,474,347],[310,271,413,294],[313,254,403,272]]
@@ -69,8 +69,9 @@ class OcrText(tornado.web.RequestHandler):
         if color_list is not None and not param_err:
             try:
                 color_list = json.loads(color_list)
-                param_err = not isinstance(color_list,list) or not isinstance(color_list[0],list)
+                param_err = not isinstance(color_list,list)
             except:
+
                 param_err = True
 
         img_w, img_h = img.size

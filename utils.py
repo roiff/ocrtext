@@ -182,6 +182,9 @@ def get_crop_image(img, points):
 
 def get_hsv_range(colorlist):
     hsv_list = []
+    if  not isinstance(colorlist,list):
+        colorlist = colorlist.split(' · ')
+
     for color_int in colorlist:
         color_int = int(color_int,16)
         b = (color_int & 255)/255.0

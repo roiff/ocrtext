@@ -22,3 +22,15 @@ local words = itemocr:ocr(item)
 for index, value in ipairs(words) do
     nLog(index..": "..value[1])
 end
+
+--完整的写法,识别
+local item = {
+    {237,136,301,162},
+    {90,278,146,298},
+    {399,279,436,292},
+}
+local opts = {
+    whitelist = "01234567890",
+    colorlist = {{}},
+}
+local words = itemocr:ocr(item,opts)

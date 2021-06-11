@@ -109,7 +109,7 @@ function M.new(url,filename)
             data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="whitelist"\r\n\r\n%s\r\n',whitelist)
         end
         if colorlist then
-            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="colorlist"\r\n\r\n%s\r\n',colorlist)
+            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="colorlist"\r\n\r\n%s\r\n',json.encode(colorlist))
         end
         data[#data+1] = string.format(
             '----abcdefg\r\nContent-Disposition: form-data; name="file"; filename="push.jpg"\r\nContent-Type: image/jpeg\r\n\r\n%s\r\n----abcdefg--',

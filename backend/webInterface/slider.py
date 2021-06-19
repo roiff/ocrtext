@@ -1,5 +1,3 @@
-import time,random,time
-
 import tornado.web
 import tornado.gen
 import tornado.httpserver
@@ -7,6 +5,7 @@ import json
 import numpy as np
 import cv2
 import os
+import time
 
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log

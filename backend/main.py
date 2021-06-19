@@ -15,7 +15,7 @@ import tornado.httpserver
 import tornado.ioloop
 from tornado.web import StaticFileHandler
 from backend.tools.get_host_ip import host_ip
-from backend.webInterface import ocrtext,index,slider
+from backend.webInterface import ocrtext,index,slider,qrcode
 from backend.tools import log
 import logging
 logger = logging.getLogger(log.LOGGER_ROOT_NAME+'.'+__name__)
@@ -27,6 +27,7 @@ def make_app():
     return tornado.web.Application([
         (r"/api/ocrtext/", ocrtext.OcrText),
         (r"/api/slider/", slider.Slider),
+        (r"/api/qrcode/", qrcode.Qrcode),
         (r"/", index.Index),
         (r"/(.*)", StaticFileHandler,
         {"path": os.path.join(current_path, "dist/ocrtext_fontend"), "default_filename": "index.html"}),

@@ -1,5 +1,3 @@
-import time
-
 from model import  OcrHandle
 import tornado.web
 import tornado.gen
@@ -12,6 +10,7 @@ from config import dbnet_max_size
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log
 import logging
+import time
 
 logger = logging.getLogger(log.LOGGER_ROOT_NAME + '.' +__name__)
 

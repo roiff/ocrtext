@@ -2,4 +2,4 @@
 *.pyc
 *.log
 /.vscode/
-
+/TS_Test_Script/*.json

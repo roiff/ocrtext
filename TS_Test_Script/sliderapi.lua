@@ -28,22 +28,35 @@ function M.new(url)
         end
     end
     obj.img_path = obj.path.."slider.jpg"
+    -- dialog(obj.img_path)
 
     ---创建一个返回滑块的识别
     --- @param box table @必填 格式如{x1,y1,x2,y2}
     function obj:find(box)
-        if type(box) ~= "table" then
-            return
-        end
-        local x1,y1,x2,y2 = table.unpack(box)
-        snapshot(self.img_path,x1,y1,x2,y2)
         local imgfile
-        local file = io.open(self.img_path, 'rb')
-        if file then
-            imgfile = file:read('*a')
-            file:close()
+        -- dialog(self.img_path)
+        if type(box) == "string" then
+            local file = io.open(box, 'rb')
+            if file then
+                imgfile = file:read('*a')
+                file:close()
+            else
+                logger:error("识别API图片打开失败")
+                return
+            end
+        elseif type(box) == "table" then
+            local x1,y1,x2,y2 = table.unpack(box)
+            snapshot(self.img_path,x1,y1,x2,y2)
+            local file = io.open(self.img_path, 'rb')
+            if file then
+                imgfile = file:read('*a')
+                file:close()
+            else
+                logger:error("识别API图片打开失败")
+                return
+            end
         else
-            logger:error("识别API图片打开失败")
+            
             return
         end
 
@@ -57,7 +70,7 @@ function M.new(url)
         local response_body = {}
         local _, code =
             http_socket.request {
-            url = obj.url,
+            url = self.url,
             method = 'POST',
             headers = headers,
             source = ltn12.source.string(data),
@@ -68,6 +81,7 @@ function M.new(url)
             local str = table.concat(response_body)
             if #str > 0 then
                 local points = json.decode(str)["res"]
+                -- dialog(str)
                 if points then
                     return points[1],points[2]
                 else
@@ -79,8 +93,8 @@ function M.new(url)
             logger:error("识别API连接失败: "..response_body[1],self.img_path)
             return
         end
+        
     end
-
     return obj
 end
 

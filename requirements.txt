@@ -5,5 +5,4 @@ onnxruntime==1.4.0
 Shapely==1.7.0
 pyclipper==1.2.0
 Pillow==7.2.0
-zbar
-pyzbar
+pyzbar==0.1.8

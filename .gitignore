@@ -1,4 +1,5 @@
 .DS_Store
 *.pyc
 *.log
-vscode
+/.vscode/*
+/TS_Test_Script/*.json

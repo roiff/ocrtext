@@ -67,10 +67,10 @@ web界面入口: http://192.168.31.139:8099
 使用 Dockerfile 构建 或者直接 Pull镜像  
 ```shell script
 # dockerfile 构建
-docker build -t ocrtext:v1 .
+docker build -t ocrtext:lastet .
 
 # 运行镜像
-docker run -itd -p 8099:8099 -v $(pwd):/ocrtext --name ocrtext ocrtext:v1 
+docker run -itd -p 8099:8099 -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet 
 ```
 
 这里把容器的8089端口映射到了物理机的8089上，但如果你不喜欢映射，去掉run后面的-p 8089:8089 也可以使用docker的IP加8089来访问

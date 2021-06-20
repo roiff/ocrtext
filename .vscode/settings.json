@@ -1,3 +1,6 @@
 {
-    "python.pythonPath": "/Users/chenyun/opt/anaconda3/envs/ocrtext/bin/python"
+    "python.pythonPath": "/Users/chenyun/opt/anaconda3/envs/ocrtext/bin/python",
+    "Lua.diagnostics.globals": [
+        "ltn12"
+    ]
 }

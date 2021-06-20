@@ -1,9 +1,11 @@
 require('TSLib')
 local ts = require('ts')
-local sz = require("sz")
 local image = require("tsimg")
 local json = ts.json
-local http_socket = require('socket.http')
+local ok, http_socket = pcall(require, "socket.http")
+if not ok then
+    http_socket = require('szocket.http')
+end
 
 -- logger日志,如有需要自行接入.
 local logger = {}
@@ -109,7 +111,7 @@ function M.new(url,filename)
             data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="whitelist"\r\n\r\n%s\r\n',whitelist)
         end
         if colorlist then
-            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="colorlist"\r\n\r\n%s\r\n',colorlist)
+            data[#data+1] = string.format('----abcdefg\r\nContent-Disposition: form-data; name="colorlist"\r\n\r\n%s\r\n',json.encode(colorlist))
         end
         data[#data+1] = string.format(
             '----abcdefg\r\nContent-Disposition: form-data; name="file"; filename="push.jpg"\r\nContent-Type: image/jpeg\r\n\r\n%s\r\n----abcdefg--',

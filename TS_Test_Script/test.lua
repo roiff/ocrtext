@@ -56,3 +56,8 @@ for i = 1,10 do
     end
 end
 
+local Qrcode = require("qrcodeapi")
+local qrcode = Qrcode.new("http://47.92.105.212:8099/api/qrcode/")
+
+
+dialog(qrcode:find({27,159,612,688}))

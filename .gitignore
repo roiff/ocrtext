@@ -3,3 +3,4 @@
 *.log
 /.vscode/*
 /TS_Test_Script/*.json
+backend/logs/*

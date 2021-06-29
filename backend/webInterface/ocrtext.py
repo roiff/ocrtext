@@ -6,12 +6,11 @@ import tornado.gen
 import tornado.httpserver
 from PIL import Image,ImageDraw,ImageFont
 from io import BytesIO
-import json
-import base64
 from config import dbnet_max_size
 from backend.tools.np_encoder import NpEncoder
 from backend.tools import log
-import logging
+
+import logging,json,base64,re
 
 logger = logging.getLogger(log.LOGGER_ROOT_NAME + '.' +__name__)
 
@@ -28,6 +27,7 @@ class OcrText(tornado.web.RequestHandler):
         start_time = time.time()        
         # 接受参数
         img_up = self.request.files.get('file', None)
+        img_base64 = self.get_argument('base64', None)
         box_list = self.get_argument('boxlist', None)
         color_list = self.get_argument('colorlist', None)
         white_list = self.get_argument('whitelist', None)
@@ -50,6 +50,11 @@ class OcrText(tornado.web.RequestHandler):
             img_up = img_up[0]
             img = Image.open(BytesIO(img_up.body))
             img = img.convert("RGB")
+        elif img_base64 is not None and len(img_up) > 0:
+            img_base64 = re.sub('^data:image/.+;base64,', '', img_base64)
+            img_base64 = base64.b64decode(img_base64)
+            img = Image.open(BytesIO(img_base64))
+            pass
         else:
             self.set_status(400)
             logger.error(json.dumps({'code': 400, 'msg': '没有传入图像'}, cls=NpEncoder))

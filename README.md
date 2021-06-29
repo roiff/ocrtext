@@ -43,7 +43,7 @@ Windows和MacOS系统下推荐通过构建Docker镜像来使用，其他Linux平
 * SWAP:   2G  
 
 ## 安装说明  
-### 服务器部署
+### 本地部署
 1. 安装python3.7  
     推荐使用miniconda
     
@@ -70,10 +70,11 @@ web界面入口: http://192.168.31.139:8099
 docker build -t ocrtext:lastet .
 
 # 运行镜像
-docker run -itd -p 8099:8099 -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet 
+docker run -itd -p 8099:8099 --restart=always -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet
 ```
 
 这里把容器的8089端口映射到了物理机的8089上，但如果你不喜欢映射，去掉run后面的-p 8089:8089 也可以使用docker的IP加8089来访问
+
 
 ## 接口
 
@@ -81,7 +82,7 @@ docker run -itd -p 8099:8099 -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet
 
 **描述：** 进行文字识别与检测的接口
 
-**地址：** /api/tr-run/
+**地址：** /api/ocrtext/
 
 **方法：** POST
 
@@ -89,7 +90,8 @@ docker run -itd -p 8099:8099 -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet
 
 | 参数名称  | 是否必选 | 数据类型 | 描述                                                         |
 | --------- | -------- | -------- | :----------------------------------------------------------- |
-| file      | 是       | file     | 通过上传的方式来发送图片的字段                               |
+| file      | 是(或者base64) | file     | 通过上传的方式来发送图片的字段                               |
+| base64    | 是(或者file)   | string   | 通过base64来发送图片的字段                               |
 | compress  | 否       | int      | 值为空时，默认将图片最短边压缩到960px。非空时，将最短边压缩到该值的大小。 |
 | whitelist | 否       | string   | 只返回白名单字符串中包含的字符。                             |
 | boxlist   | 否       | list     | 值为空时，自动查找文本框。非空时，按照手动给出的文本框识别文字。格式为：[[x1,y1,x2,y2],[x3,y3,x4,y4]]，注意所包含的每一条范围（如：x1,y1,x2,y2）都只能识别单行或者单列的文字，多行是无法识别的，多行文字就标注多个范围。 |

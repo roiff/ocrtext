@@ -50,7 +50,7 @@ class OcrText(tornado.web.RequestHandler):
             img_up = img_up[0]
             img = Image.open(BytesIO(img_up.body))
             img = img.convert("RGB")
-        elif img_base64 is not None and len(img_up) > 0:
+        elif img_base64 is not None and len(img_base64) > 0:
             img_base64 = re.sub('^data:image/.+;base64,', '', img_base64)
             img_base64 = base64.b64decode(img_base64)
             img = Image.open(BytesIO(img_base64))

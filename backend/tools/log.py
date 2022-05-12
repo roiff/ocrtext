@@ -1,5 +1,3 @@
-
-
 import logging
 from logging.handlers import RotatingFileHandler
 import os
@@ -7,7 +5,7 @@ import datetime
 
 BASE_PATH = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-LOGGER_ROOT_NAME = 'TrWebOCRLog'
+LOGGER_ROOT_NAME = 'OCRLog'
 logger = logging.getLogger(LOGGER_ROOT_NAME)
 logger.setLevel(logging.INFO)
 # Formatter
@@ -21,7 +19,7 @@ if not os.path.exists(logfile_path):
 
 handler_logfile = RotatingFileHandler(logfile_path + logfile_name,
                                       maxBytes=1 * 1024 * 1024,
-                                      backupCount=3)
+                                      backupCount=3,encoding='utf-8')
 handler_logfile.setLevel(logging.INFO)
 handler_logfile.setFormatter(formatter)
 

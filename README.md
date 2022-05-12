@@ -67,7 +67,7 @@ web界面入口: http://192.168.31.139:8099
 使用 Dockerfile 构建 或者直接 Pull镜像  
 ```shell script
 # dockerfile 构建
-docker build -t ocrtext:lastet .
+docker build -t ocrtext:v2 .
 
 # 运行镜像
 docker run -itd -p 8099:8099 --restart=always -v $(pwd):/ocrtext --name ocrtext ocrtext:lastet
